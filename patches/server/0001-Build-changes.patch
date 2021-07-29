@@ -1,14 +1,14 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Noah van der Aa <ndvdaa@gmail.com>
-Date: Sat, 12 Jun 2021 16:40:34 +0200
+Date: Thu, 29 Jul 2021 13:42:57 +0200
 Subject: [PATCH] Build changes.
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 04938bb10c35d2e424043adb7ed8fec2e42bb816..8fd135795999454ebe01a4c8c3337ff8f5b5c9a8 100644
+index b50463c2356301a1b47a0bf4f50dc1f121d363a1..9afd7f5ee5c50dece5fcf3980999ef9fd7c28fef 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -18,8 +18,8 @@ repositories {
+@@ -28,8 +28,8 @@ repositories {
  }
  
  dependencies {
@@ -19,7 +19,7 @@ index 04938bb10c35d2e424043adb7ed8fec2e42bb816..8fd135795999454ebe01a4c8c3337ff8
      // Paper start
      implementation("org.jline:jline-terminal-jansi:3.12.1")
      implementation("net.minecrell:terminalconsoleappender:1.2.0")
-@@ -122,7 +122,7 @@ tasks.test {
+@@ -176,7 +176,7 @@ tasks.test {
  fun TaskContainer.registerRunTask(
      name: String, block: JavaExec.() -> Unit
  ): TaskProvider<JavaExec> = register<JavaExec>(name) {
@@ -29,10 +29,10 @@ index 04938bb10c35d2e424043adb7ed8fec2e42bb816..8fd135795999454ebe01a4c8c3337ff8
      workingDir = rootProject.layout.projectDirectory.dir(
          providers.gradleProperty("runWorkDir").forUseAtConfigurationTime().orElse("run")
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 3bf39c2d2aa3fc4fd0815dacea57e4899ec0da0e..1cc07a163a5d10c196246b76a714affd26743406 100644
+index 3dded5c491ace6b073a7bc3178976bd70f0b9393..2f9187e47b4bff71fb77ce6b5f3a6e147dcb1c8d 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1649,7 +1649,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1651,7 +1651,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
      @DontObfuscate
      public String getServerModName() {
@@ -40,12 +40,12 @@ index 3bf39c2d2aa3fc4fd0815dacea57e4899ec0da0e..1cc07a163a5d10c196246b76a714affd
 +        return "Dripstone"; // Dripstone - Dripstone > // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
      }
  
-     public SystemReport fillSystemReport(SystemReport systemreport) {
+     public SystemReport fillSystemReport(SystemReport details) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 8a98bd1018afd934696fedbed24e271ab6b75f51..1bbe42b382131212363ce000a81e856cd76a056e 100644
+index 9954e45c32a4b6d80fe912ed9d55cd4fc8c4e98b..a69656871b67902b3f34cf61776e92db9df1291a 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -230,7 +230,7 @@ import javax.annotation.Nullable; // Paper
+@@ -239,7 +239,7 @@ import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
  
  public final class CraftServer implements Server {
