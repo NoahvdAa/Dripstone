@@ -5,7 +5,7 @@ Subject: [PATCH] Add set maximum TPS command
 
 
 diff --git a/src/main/java/com/destroystokyo/paper/PaperConfig.java b/src/main/java/com/destroystokyo/paper/PaperConfig.java
-index 95d8cf449bf0439fddaf319246fef51e1570b68e..ac1a74fca7d10962f783178ef54ab9de0a36b8a8 100644
+index dcae40fde8087ce09ec8b9360f2abc860b88c975..2985cf4eed7312ce1a56bd601a24def0bf83c53b 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperConfig.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperConfig.java
 @@ -70,6 +70,7 @@ public class PaperConfig {
@@ -14,8 +14,8 @@ index 95d8cf449bf0439fddaf319246fef51e1570b68e..ac1a74fca7d10962f783178ef54ab9de
          commands.put("mspt", new MSPTCommand("mspt"));
 +        commands.put("setmaxtps", new me.noahvdaa.dripstone.SetMaxTPSCommand("setmaxtps")); // Dripstone - TODO: Move this to DripstoneConfig class.
  
-         version = getInt("config-version", 21);
-         set("config-version", 21);
+         version = getInt("config-version", 22);
+         set("config-version", 22);
 diff --git a/src/main/java/com/destroystokyo/paper/gui/RAMDetails.java b/src/main/java/com/destroystokyo/paper/gui/RAMDetails.java
 index fa56cd09102a89692b42f1d14257990508c5c720..21753e2c72dd39ed5c87603e99ee90be4354588c 100644
 --- a/src/main/java/com/destroystokyo/paper/gui/RAMDetails.java
@@ -108,10 +108,10 @@ index 0000000000000000000000000000000000000000..d31951e83ff3256420c57eac8f9fc161
 +    }
 +}
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 2f9187e47b4bff71fb77ce6b5f3a6e147dcb1c8d..1dbbe51ef88e7982734e7497def4bf7d51142fe8 100644
+index fd6e4d595411a2a4808ab41f084564ae44a4e7b0..aee4e59f44c2ae47730de833bb7b57a2067c0285 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -193,7 +193,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -195,7 +195,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
      public static final Logger LOGGER = LogManager.getLogger();
      private static final float AVERAGE_TICK_TIME_SMOOTHING = 0.8F;
      private static final int TICK_STATS_SPAN = 100;
@@ -120,7 +120,7 @@ index 2f9187e47b4bff71fb77ce6b5f3a6e147dcb1c8d..1dbbe51ef88e7982734e7497def4bf7d
      private static final int SNOOPER_UPDATE_INTERVAL = 6000;
      private static final int OVERLOADED_THRESHOLD = 2000;
      private static final int OVERLOADED_WARNING_INTERVAL = 15000;
-@@ -299,9 +299,12 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -301,9 +301,12 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
      public Commands vanillaCommandDispatcher;
      public boolean forceTicks; // Paper
      // CraftBukkit end
@@ -136,7 +136,7 @@ index 2f9187e47b4bff71fb77ce6b5f3a6e147dcb1c8d..1dbbe51ef88e7982734e7497def4bf7d
      private static final int SAMPLE_INTERVAL = 20; // Paper
      public final double[] recentTps = new double[ 3 ];
      public final SlackActivityAccountant slackActivityAccountant = new SlackActivityAccountant();
-@@ -1154,7 +1157,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1240,7 +1243,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
                          if (this.server.getWarnOnOverload()) // CraftBukkit
                              MinecraftServer.LOGGER.warn("Can't keep up! Is the server overloaded? Running {}ms or {} ticks behind", i, j);
@@ -145,7 +145,7 @@ index 2f9187e47b4bff71fb77ce6b5f3a6e147dcb1c8d..1dbbe51ef88e7982734e7497def4bf7d
                          this.lastOverloadWarning = this.nextTickTime;
                      }
  
-@@ -1182,13 +1185,13 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1268,13 +1271,13 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
                      //MinecraftServer.currentTick = (int) (System.currentTimeMillis() / 50); // CraftBukkit // Paper - don't overwrite current tick time
                      lastTick = curTime;
@@ -161,7 +161,7 @@ index 2f9187e47b4bff71fb77ce6b5f3a6e147dcb1c8d..1dbbe51ef88e7982734e7497def4bf7d
                      this.waitUntilNextTick();
                      this.profiler.pop();
                      this.endMetricsRecordingTick();
-@@ -1593,6 +1596,20 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1663,6 +1666,20 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
          }
          MinecraftTimings.tickablesTimer.stopTiming(); // Spigot // Paper
  
